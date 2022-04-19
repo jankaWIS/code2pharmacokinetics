@@ -80,7 +80,7 @@ See **background_definition-show_example.ipynb** for all necessary details. In s
 As described above, there are a few things which need to be done. The general outline is:
 1. Convert HIP images to h5 using ImageJ and its FiJi tool -> run **convert_bip_h5.ijm** from FiJi, navigate it to the folder with all the images you want to convert. By default, it will save the files into a subfolder called `bip` in the same folder as the original files. NOTE that this might take a while to run.
 2. Get to know the background (see [Background definition](#Background-definition) section).
-3. Run **analyse_bcg-for_Ondra.ipynb**.
-4. Run **analyse_bcg-for_Ondra-run_missing_frg.ipynb** to account for images with missing frg counterpart.
+3. Run **analyse_bcg-manual_check.ipynb**.
+4. Run **analyse_bcg-manual_check-run_missing_frg.ipynb** to account for images with missing frg counterpart.
 5. Visual check all the files (there are instructions in 3. and 4. about how to do that).
-6. Run **analyse_frg.ipynb** or maybe **analyse_frg.ipynb** -- TODO
+6. Run **run_analysis-check_results.ipynb**
