@@ -1,0 +1,9 @@
+matplotlib==3.4.2
+statsmodels==0.13.2
+scipy==1.7.3
+ipykernel==6.2.0
+pandas==1.2.4
+numpy==1.22.3
+seaborn==0.11.2
+h5py==3.3.0
+ipywidgets==7.6.3
