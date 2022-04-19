@@ -18,7 +18,7 @@ Maybe switch to pyUSID? Consult [this](https://pycroscopy.github.io/pyUSID/faq.h
 As of July 2021 (also done in March 2021), the code for converting BIP to h5 is written in FiJi macro language -- a script called **convert_bip_h5.ijm**. In general, when run, it opens a pop-up window where one can navigate to a folder with all the bip images. It will go over all of them and convert them to h5. It will name them as `"im"+i+"_"+name` where `i` is the order of the image in the folder and `name` its name. It will create a subfolder called `bip` in this given folder where all the `.h5` files will be saved.
 
 
-## Analysis
+## Analysis and Data preprocessing
 Note: `bcg` denotes *background* and `frg` *foreground* images.
 
 ### Outline
