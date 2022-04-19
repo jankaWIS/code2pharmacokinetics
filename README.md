@@ -56,6 +56,24 @@ The analysis problems has been solved by the following steps:
 #### Intensity and area measures
 At the moment, all possible combinations are exported -- that is intensity (max, mean) of the image and of the depo, area of non zero pixels of the image and of the depo. The depo is defined as anything above 200 after background+control signal subtraction. The value is arbitrary (although it comes from the fact that most of the remaining signal has values <100) and should be double checked.
 
+### Mice localisation
+
+Rather then to try to localise mice based on their fluorescence (frg images), do it based on the bcg images (white light) and then based on their name. There are a few reasons for doing so:
+1) They should be visible there and then one could just simply take that, go over all positions, save the occupied position numbers together with the mice names and then just use this. It should be simple and goes around all the previously mentioned problems.
+
+2) based on initial checks, there are some slots, some mice, where the signal is around 22-25. This is very low, compared to the control group where it's around 16 or 17 and seems like they go to the background. The fluorescense is so low that they could hence easily be missed. Furthermore, setting this threshold manually is dangerous.
+
+3) Although the name-based system has potential flaws (eg. having 2 mice instead of one or 4 instead of 3), it is quite unlikely that this would happen and if so, we would have anyway hard times determining what to do with it.
+
+### Mice naming
+
+To be consistent, each mouse will get a name in the following manner:
+
+*type_mX_imYYY_slotI*
+
+where X will be either its name (1,2,3) or its order if all are present (first, second, third), imYYY is the unique number to the file generated during conversion, type is the treatment and slot I is the slot where the mouse is. The rest will be obtained through other functions.
+
+---
 
 ### Running the analysis
 As described above, there are a few things which need to be done. The general outline is:
