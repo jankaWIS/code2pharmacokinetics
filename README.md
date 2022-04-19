@@ -65,6 +65,8 @@ Rather then to try to localise mice based on their fluorescence (frg images), do
 
 3) Although the name-based system has potential flaws (eg. having 2 mice instead of one or 4 instead of 3), it is quite unlikely that this would happen and if so, we would have anyway hard times determining what to do with it.
 
+The issue with automatic way of detecting mice is that it is not working well because the mouse has such a weak signal that the fourth slot has always the highest intensity regardless whether there is a mouse or not (there has been some artifacts in the images which makes a high signal in some specific spots).
+
 ### Mice naming
 
 To be consistent, each mouse will get a name in the following manner:
@@ -73,9 +75,16 @@ To be consistent, each mouse will get a name in the following manner:
 
 where X will be either its name (1,2,3) or its order if all are present (first, second, third), imYYY is the unique number to the file generated during conversion, type is the treatment and slot I is the slot where the mouse is. The rest will be obtained through other functions.
 
+### Background definition
+See **background_definition-show_example.ipynb** for all necessary details. In short, I use empty slots to define background specific to a slot and I use the control group to get autofluorescence and background signal for all the mice. Based on this, the thresholds of localising mice and calculating statistics are determined.
+
 ---
 
 ### Running the analysis
 As described above, there are a few things which need to be done. The general outline is:
 1. Convert HIP images to h5 using ImageJ and its FiJi tool -> run **convert_bip_h5.ijm** from FiJi, navigate it to the folder with all the images you want to convert. By default, it will save the files into a subfolder called `bip` in the same folder as the original files. NOTE that this might take a while to run.
-2. 
+2. Get to know the background (see [Background definition](#Background-definition) section).
+3. Run **analyse_bcg-for_Ondra.ipynb**.
+4. Run **analyse_bcg-for_Ondra-run_missing_frg.ipynb** to account for images with missing frg counterpart.
+5. Visual check all the files (there are instructions in 3. and 4. about how to do that).
+6. Run **analyse_frg.ipynb** or maybe **analyse_frg.ipynb** -- TODO
