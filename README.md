@@ -3,11 +3,10 @@ Set of codes to analyse fluorescence microscopy data on drug decomposition and e
 
 # General ideas of how this all should work
 
-## Experiment setup:
+## Experiment setup
 Four polymers were injected each to three mice and the fluorescence was measured in certain time intervals. The chemical should decompose or be washed away and the questions are how fast this happens (what is the kinetcs) and what the mechanism is. 
 
-## Analysis problems:
-### Loading
+## Loading data
 Files are coming out as BIP files. To process them, the idea is to load them into Python and subsequently process (subtract background, do some corrections (correction matrix), subtract mouse's autofluorescence, ...). I have not found an easy way how to load the BIP files into python because, apparently, they have some header and footer but I do not know their sctructure. I have checked [pycroscopy's github](https://github.com/pycroscopy), [docs](https://pycroscopy.github.io/pycroscopy/index.html), and [spectral](http://www.spectralpython.net/) (much more promising than pycroscopy but as seen from this [issue](https://github.com/spectralpython/spectral/issues/121), it was not very suitable for BIP files, needed an [ENVI](https://www.spectralpython.net/fileio.html) header and even though it has some [BIP function](http://www.spectralpython.net/class_func_ref.html?highlight=bip#spectral.io.bipfile.BipFile), it was hard). Since [FiJi](https://fiji.sc/) was able to open those files and export them into whatever and since [ImageJ](https://imagej.net/Welcome) is [scriptable](https://imagej.nih.gov/ij/developer/macro/macros.html#recorder) (and supports plenty of languages, eg. [Jython](https://imagej.net/Jython_Scripting) which is actually not that useful since it does not support any libraries, eg. numpy...), I have decided to use their macro feature to load the image in FiJi and then save as h5 (compression, universal, possible to load into python or any other software). The good thing is that there are some [tutorials](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/ImageJ-Tutorials-and-Demo.ipynb) on the ImageJ interface, namely one very useful is for initialisation in [Python/Jupyter](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/1-Using-ImageJ/6-ImageJ-with-Python-Kernel.ipynb) allowing to open imagej from Jupyter and run needed code. After some testing, this approach has been abandonded mostly because of [this issue](https://github.com/imagej/pyimagej/issues/99). If you are interested in this approach, please contact me. Another good thing is that one can open FiJi, record steps and use it for macro writting. Not that useful because all pop up screens are not recorded, but useful for getting a general idea.
 
 ___
@@ -15,11 +14,8 @@ ___
 
 Maybe switch to pyUSID? Consult [this](https://pycroscopy.github.io/pyUSID/faq.html)
 
-#### Update
-As of July 2021 (also done in March 2021), the code for converting BIP to h5 is written in FiJi macro language, it runs through FiJi (although its implemenation into python should not be difficult) -- one opens FiJi and Macros and lets it run, and it goes over and converts all .bip files in the given folder into h5. The code is named **convert_bip_h5.ijm**.
-
-#### BIP to h5 conversion
-Done in FiJi using a script called **convert_bip_h5.ijm**. In general, when run, it opens a pop-up window where one can navigate to a folder with all the bip images. It will go over all of them and convert them to h5. It will name them as `"im"+i+"_"+name` where `i` is the order of the image in the folder and `name` its name. It will create a subfolder called `bip` in this given folder where all the `.h5` files will be saved.
+### BIP to h5 conversion
+As of July 2021 (also done in March 2021), the code for converting BIP to h5 is written in FiJi macro language -- a script called **convert_bip_h5.ijm**. In general, when run, it opens a pop-up window where one can navigate to a folder with all the bip images. It will go over all of them and convert them to h5. It will name them as `"im"+i+"_"+name` where `i` is the order of the image in the folder and `name` its name. It will create a subfolder called `bip` in this given folder where all the `.h5` files will be saved.
 
 
 ## Analysis
