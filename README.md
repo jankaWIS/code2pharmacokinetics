@@ -102,4 +102,6 @@ As described above, there are a few things which need to be done. The general ou
 ## Analysis of tiff files
 This section describes analysis of tiff files which were generated manually using the knowledge and information obtained in the previous section. Data coming from this analysis were used and showed in the article. The relevant information and the data analysis are described in **analyse-tiff.ipynb**.
 
-
+NOTE:
+1. there is no correction matrix applied to the data
+2. there are no slots -- each image is already a full image
