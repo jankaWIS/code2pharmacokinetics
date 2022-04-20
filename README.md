@@ -1,13 +1,18 @@
-# Purpose
-Set of codes to analyse fluorescence microscopy data on drug decomposition and exclusion. Below find the general ideas. This is the main place where all the information is to be found and what is to be used.
 
-# General ideas of how this all should work
+Set of codes to analyse fluorescence microscopy data on drug decomposition and exclusion. Below find the general ideas. This is the main place where all the information about data processing and analysis done in python for the article is to be found and what is to be used.
+
+# Description of approaches and repo structure
+
+Helper functions are saved in `functions` folder. Notebooks with output to see a reference how it should look are saved in `run` and notebooks in this repo are cleared of all output ready to be run. Packages with versions used in this analysis are written in `requirements.txt` and each notebook has a watermark saying what was used to run that notebook. Data are not part of this repo except for some csv files with dates and names and path to the data has to be set manually before running the notebooks.
 
 ## Experiment setup
 Four polymers were injected each to three mice and the fluorescence was measured in certain time intervals. The chemical should decompose or be washed away and the questions are how fast this happens (what is the kinetcs) and what the mechanism is. 
 
+## Initial data analysis
+What you find below is the first analysis and data processing done on this project. That includes loading the raw images, localising mice, finding correction matrices and background signal together with mice's autofluorescence signal, setting thresholds and selecting measures of interest. The second analysis, which was used in the article, comes from TIFF files geenrated based on information from the first analysis and is described in a later section [Analysis of tiff files](https://github.com/jankaWIS/code2pharmacokinetics/README.md#analysis-of-tiff-files).
+
 ## Loading data
-Files are coming out as BIP files. To process them, the idea is to load them into Python and subsequently process (subtract background, do some corrections (correction matrix), subtract mouse's autofluorescence, ...). I have not found an easy way how to load the BIP files into python because, apparently, they have some header and footer but I do not know their sctructure. I have checked [pycroscopy's github](https://github.com/pycroscopy), [docs](https://pycroscopy.github.io/pycroscopy/index.html), and [spectral](http://www.spectralpython.net/) (much more promising than pycroscopy but as seen from this [issue](https://github.com/spectralpython/spectral/issues/121), it was not very suitable for BIP files, needed an [ENVI](https://www.spectralpython.net/fileio.html) header and even though it has some [BIP function](http://www.spectralpython.net/class_func_ref.html?highlight=bip#spectral.io.bipfile.BipFile), it was hard). Since [FiJi](https://fiji.sc/) was able to open those files and export them into whatever and since [ImageJ](https://imagej.net/Welcome) is [scriptable](https://imagej.nih.gov/ij/developer/macro/macros.html#recorder) (and supports plenty of languages, eg. [Jython](https://imagej.net/Jython_Scripting) which is actually not that useful since it does not support any libraries, eg. numpy...), I have decided to use their macro feature to load the image in FiJi and then save as h5 (compression, universal, possible to load into python or any other software). The good thing is that there are some [tutorials](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/ImageJ-Tutorials-and-Demo.ipynb) on the ImageJ interface, namely one very useful is for initialisation in [Python/Jupyter](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/1-Using-ImageJ/6-ImageJ-with-Python-Kernel.ipynb) allowing to open imagej from Jupyter and run needed code. After some testing, this approach has been abandonded mostly because of [this issue](https://github.com/imagej/pyimagej/issues/99). If you are interested in this approach, please contact me. Another good thing is that one can open FiJi, record steps and use it for macro writting. Not that useful because all pop up screens are not recorded, but useful for getting a general idea.
+Files are coming out as BIP files. To process them, the idea is to load them into Python and subsequently process (subtract background, do some corrections (correction matrix), subtract mouse's autofluorescence, ...). I have not found an easy way how to load the BIP files into python because, apparently, they have some header and footer but I do not know their sctructure. I have checked [pycroscopy's github](https://github.com/pycroscopy), [docs](https://pycroscopy.github.io/pycroscopy/index.html), and [spectral](http://www.spectralpython.net/) (much more promising than pycroscopy but as seen from this [issue](https://github.com/spectralpython/spectral/issues/121), it was not very suitable for BIP files, needed an [ENVI](https://www.spectralpython.net/fileio.html) header and even though it has some [BIP function](http://www.spectralpython.net/class_func_ref.html?highlight=bip#spectral.io.bipfile.BipFile), it was hard). Since [FiJi](https://fiji.sc/) was able to open those files and export them into whatever and since [ImageJ](https://imagej.net/Welcome) is [scriptable](https://imagej.nih.gov/ij/developer/macro/macros.html#recorder) (and supports plenty of languages, eg. [Jython](https://imagej.net/Jython_Scripting) which is actually not that useful since it does not support any libraries, eg. numpy...), I have decided to use their macro feature to load the image in FiJi and then save as h5 (compression, universal, possible to load into python or any other software). The good thing is that there are some [tutorials](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/ImageJ-Tutorials-and-Demo.ipynb) on the ImageJ interface, namely one very useful is for initialisation in [Python/Jupyter](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/1-Using-ImageJ/6-ImageJ-with-Python-Kernel.ipynb) allowing to open imagej from Jupyter and run needed code. After some testing, this approach has been abandonded mostly because of [this issue](https://github.com/imagej/pyimagej/issues/99). If you are interested in this approach, please contact me. 
 
 ___
 [hdf5 article](https://blade6570.github.io/soumyatripathy/hdf5_blog.html)
@@ -49,9 +54,6 @@ The analysis problems has been solved by the following steps:
 7. We only look at intensity and area, see notes below.
 
 
-#### Intensity and area measures
-At the moment, all possible combinations are exported -- that is intensity (max, mean) of the image and of the depo, area of non zero pixels of the image and of the depo. The depo is defined as anything above 200 after background+control signal subtraction. The value is arbitrary (although it comes from the fact that most of the remaining signal has values <100) and should be double checked.
-
 ### Mice localisation
 
 Rather then to try to localise mice based on their fluorescence (frg images), do it based on the bcg images (white light) and then based on their name. There are a few reasons for doing so:
@@ -74,6 +76,17 @@ where X will be either its name (1,2,3) or its order if all are present (first, 
 ### Background definition
 See **background_definition-show_example.ipynb** for all necessary details. In short, I use empty slots to define background specific to a slot and I use the control group to get autofluorescence and background signal for all the mice. Based on this, the thresholds of localising mice and calculating statistics are determined.
 
+## Measures of interest
+
+### Intensity and area measures
+At the moment, all possible combinations are exported -- that is intensity (max, mean) of the image and of the depo, area of non zero pixels of the image and of the depo. The depo is defined as anything above 200 after background+control signal subtraction. The value is arbitrary coming from the fact that most of the remaining signal has values <100. For details see **get_total_signal_and_area** function in **process_signal.py**.
+
+### K10 (OG1) index
+To get this parameter, mean value of top 10 % most intensive pixels in the FOV is divided by the mean of pixels above threshold. This value was used as an indicator of distribution width of the depot.
+
+### Fractal analysis
+Eventually not implemented.
+
 ---
 
 ### Running the analysis
@@ -84,3 +97,9 @@ As described above, there are a few things which need to be done. The general ou
 4. Run **analyse_bcg-manual_check-run_missing_frg.ipynb** to account for images with missing frg counterpart.
 5. Visual check all the files (there are instructions in 3. and 4. about how to do that).
 6. Run **run_analysis-check_results.ipynb**
+
+
+## Analysis of tiff files
+This section describes analysis of tiff files which were generated manually using the knowledge and information obtained in the previous section. Data coming from this analysis were used and showed in the article. The relevant information and the data analysis are described in **analyse-tiff.ipynb**.
+
+
