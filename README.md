@@ -3,7 +3,7 @@ Set of codes to analyse fluorescence microscopy data on drug decomposition and e
 
 # Description of approaches and repo structure
 
-Helper functions are saved in `functions` folder. Notebooks with output to see a reference how it should look are saved in `run` and notebooks in this repo are cleared of all output ready to be run. Packages with versions used in this analysis are written in `requirements.txt` and each notebook has a watermark saying what was used to run that notebook. Data are not part of this repo except for some csv files with dates and names and path to the data has to be set manually before running the notebooks.
+Helper functions are saved in `functions` folder. Notebooks with output to see a reference how it should look are saved in `run_notebooks` and notebooks in this repo are cleared of all output ready to be run. Packages with versions used in this analysis are written in `requirements.txt` and each notebook has a watermark saying what was used to run that notebook. Data are not part of this repo except for some csv files with dates and names and path to the data has to be set manually before running the notebooks.
 
 ## Experiment setup
 Four polymers were injected each to three mice and the fluorescence was measured in certain time intervals. The chemical should decompose or be washed away and the questions are how fast this happens (what is the kinetcs) and what the mechanism is. 
